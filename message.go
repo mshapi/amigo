@@ -2,11 +2,12 @@ package amigo
 
 import (
 	"bytes"
-	"github.com/google/uuid"
 	"strconv"
 	"strings"
 	"sync"
 )
+
+const lengthActionID = 10
 
 const (
 	keyAction    = "Action"
@@ -37,10 +38,6 @@ func NewMessage(data map[string]string) *Message {
 	res := &Message{}
 	res.SetFields(data)
 	return res
-}
-
-func generateActionID() string {
-	return uuid.New().String()
 }
 
 func (m *Message) Set(key, value string) {
@@ -84,7 +81,7 @@ func (m *Message) GetAction() string {
 func (m *Message) GetActionID() string {
 	id, ok := m.get(keyActionID)
 	if !ok || id == "" {
-		id = generateActionID()
+		id = generateActionID(lengthActionID)
 		m.Set(keyActionID, id)
 	}
 	return id
