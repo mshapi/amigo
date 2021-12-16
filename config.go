@@ -2,6 +2,7 @@ package amigo
 
 import (
 	"net"
+	"net/url"
 	"strconv"
 	"time"
 )
@@ -24,6 +25,29 @@ type ConnectionConfig struct {
 	SenderBufferSize int
 
 	KeepAliveTimeout, RequestTimeout time.Duration
+}
+
+func ConfigFromURL(URL string) (*ConnectionConfig, error) {
+	tmp, err := url.Parse(URL)
+	if err != nil {
+		return nil, err
+	}
+
+	host := tmp.Hostname()
+	port, _ := strconv.ParseUint(tmp.Port(), 10, 64)
+
+	var user, pass string
+	if tmp.User != nil {
+		user = tmp.User.Username()
+		pass, _ = tmp.User.Password()
+	}
+
+	return &ConnectionConfig{
+		Host:     host,
+		Port:     port,
+		Username: user,
+		Password: pass,
+	}, nil
 }
 
 func (c *ConnectionConfig) prepare() {
