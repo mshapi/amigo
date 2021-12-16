@@ -42,11 +42,20 @@ func ConfigFromURL(URL string) (*ConnectionConfig, error) {
 		pass, _ = tmp.User.Password()
 	}
 
+	senderBufferSize, _ := strconv.Atoi(tmp.Query().Get("SenderBufferSize"))
+
+	keepAliveTimeout, _ := strconv.ParseInt(tmp.Query().Get("KeepAliveTimeout"), 10, 64)
+	requestTimeout, _ := strconv.ParseInt(tmp.Query().Get("RequestTimeout"), 10, 64)
+
 	return &ConnectionConfig{
 		Host:     host,
 		Port:     port,
 		Username: user,
 		Password: pass,
+
+		SenderBufferSize: senderBufferSize,
+		KeepAliveTimeout: time.Duration(keepAliveTimeout),
+		RequestTimeout:   time.Duration(requestTimeout),
 	}, nil
 }
 
