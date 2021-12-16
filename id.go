@@ -13,10 +13,7 @@ func init() {
 }
 
 func generateActionID(length int) string {
-	l := length / 2
-	if length%2 == 1 {
-		l++
-	}
+	l := length/2 + length%2
 
 	b := make([]byte, l)
 
@@ -25,5 +22,5 @@ func generateActionID(length int) string {
 		panic(err)
 	}
 
-	return fmt.Sprintf("%x", b[:])[:length]
+	return fmt.Sprintf("%x", b)[:length]
 }
